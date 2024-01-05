@@ -1,0 +1,79 @@
+programa
+{ 
+   inclui biblioteca Texto --> t
+   const cadeia LOGIN_CORRETO = "aluno"
+   const cadeia SENHA_CORRETA = "proway"
+
+   cadeia login = "", senha = ""
+   inteiro opcao =0
+
+   cadeia contas[] = {"1234567"}
+
+   funcao logico validaAcesso (cadeia pLogin, cadeia pSenha, cadeia pConta)
+   {
+       retorne (pLogin == LOGIN_CORRETO) e (pSenha == SENHA_CORRETA)
+   }
+   funcao mostraMenu()
+   { 
+       enquanto (opcao!=5)
+      {
+        limpa()
+        escreva("+........................................................+\n")
+        escreva("|                    BANCO PROWAY                        |\n")
+        escreva("+........................................................+\n")
+        escreva("|    1 - SACAR               2 - DEPOSITAR               |\n")
+        escreva("|    3 -TRANSFERIR           4 - VER SALDO               |\n")
+        escreva("|                 5 - SAIR                               |\n")
+        escreva("|....................................................... |\n")
+        leia(opcao)
+        escolha (opcao)
+       } 
+              caso 1:
+              {
+                    escreva ("Mostra a Sacar")
+                    u.aguarde (2000)
+                    pare
+              }
+               caso 2:
+              {
+                    escreva ("Mostra a Depositar")
+                    u.aguarde (2000)
+                    pare
+              }
+              caso 3:
+              {
+                    escreva ("Mostra a Transferir")
+                    u.aguarde (2000)
+                    pare
+              }
+                caso 4:
+              {
+                    escreva (" Seu saldo é:")
+                    u.aguarde (2000)
+                    pare
+              }
+              
+      }
+      escreva ("Obrigado por usar o banco Proway")
+   funcao inicio()
+   {
+       enquanto (nao(validaAcesso(login,senha)))
+       { 
+          se ((login != "") e (senha!= ""))
+              {
+                  escreva ("Login/senha invalidos")
+                  u.aguarde (3000)
+              }
+          
+           limpa()
+           escreva("Login: ")
+           leia(login)
+           escreva("Senha: ")
+           leia(senha)
+        }
+    }
+}
+           
+    
+   
+   
