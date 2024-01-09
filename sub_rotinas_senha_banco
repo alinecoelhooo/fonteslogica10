@@ -1,21 +1,86 @@
 programa
-{ 
+{
+ 
    inclui biblioteca Texto --> t
+   inclui biblioteca Util --> u
+   inclui biblioteca Matematica --> m
+
+   
+   const cadeia MSG_SEM_SALDO = "Saldo Insuficiente!"
    const cadeia LOGIN_CORRETO = "aluno"
    const cadeia SENHA_CORRETA = "proway"
+   const cadeia TAMANHO_PADRAO = 7
+   const cadeia TEMPO_PADRAO = 2000
 
-   cadeia login = "", senha = ""
-   inteiro opcao =0
+   cadeia login = "", senha = "", conta ="", contaDestino = ""
+   inteiro opcao = 0
+   inteiro cont 
+   logico existeConta = falso
+   real valor = 0., SaldoContaA = 0., SaldoContaB = 0.
 
-   cadeia contas[] = {"1234567"}
+   cadeia mensagemFinal = "\n Obrigado por usar o sistema"
 
-   funcao logico validaAcesso (cadeia pLogin, cadeia pSenha, cadeia pConta)
+   cadeia contas[] = {"1234567", "7654321"}
+
+
+   funcao logico existeConta(cadeia pConta, logico pMostraMsg)
    {
+         para (cont = 0, cont <= u.numero_elementos(contas) -1; cont++)
+         {
+               existeConta = contas[cont] == pConta
+               se ( existeConta)
+               {
+                   retorne verdadeiro
+               }
+              senao
+              {
+                  se (cont == u.numero_elementos(contas) -1)
+                {
+                  se (pMostraMsg)
+                     EscrevaEAguarde("Conta inexistente!", TEMPO_PADRAO)
+                  retorne falso  
+                }   
+              }
+            }
+         retorne falso
+      }
+
+     funcao logico validaAcesso (cadeia pLogin, cadeia pSenha, cadeia pConta)
+     {
+         se (t.numero_caracteres(pConta) == TAMANHO_PADRAO)
+         {   
+               se (nao(existeConta(pConta,verdadeiro)))
+               retorne falso
+         }
+          senao
+            retorne falso
        retorne (pLogin == LOGIN_CORRETO) e (pSenha == SENHA_CORRETA)
-   }
-   funcao mostraMenu()
-   { 
-       enquanto (opcao!=5)
+     }
+    
+       funcao logico existeSaldo (cadeia pConta, real pValor)
+      {
+          se (SaldoContaA < pValor)
+          {
+             EscrevaEAguarde (MSG_SEM_SALDO, TEMPO_PADRAO)
+             retorne falso
+          }
+          retorne verdadeiro
+      }
+       funcao EscrevaEAguarde(cadeia pMensagem, inteiro pTempo)
+     { 
+      escreva(pMensagem)
+      u.aguarde(pTempo)
+
+      }
+
+      funcao VerSaldo()
+     {
+     EscrevaEAguarde(("Saldo atual: "+ (m.arredondar(SaldoContaA, 3))), TEMPO_PADRAO)
+     }
+   
+     funcao mostraMenu()
+     { 
+      enquanto (opcao!=5)
       {
         limpa()
         escreva("+........................................................+\n")
@@ -23,46 +88,74 @@ programa
         escreva("+........................................................+\n")
         escreva("|    1 - SACAR               2 - DEPOSITAR               |\n")
         escreva("|    3 -TRANSFERIR           4 - VER SALDO               |\n")
-        escreva("|                 5 - SAIR                               |\n")
+        escreva("|    5 - SAIR                                            |\n")
         escreva("|....................................................... |\n")
         leia(opcao)
         escolha (opcao)
        } 
               caso 1:
               {
-                    escreva ("Mostra a Sacar")
-                    u.aguarde (2000)
+                    escreva ("Valor do Saque: ")
+                    leia ( valor )
+                    se (ExisteSaldo (conta, valor))
+                    {
+                    SaldoContaA -= valor
+                    EscrevaEAguarde ("Saque efetuado com sucesso! ", TEMPO_PADRAO)
+                    }
                     pare
               }
                caso 2:
               {
-                    escreva ("Mostra a Depositar")
-                    u.aguarde (2000)
+                     escreva ("Valor do Deposito: ")
+                    leia ( valor )
+                    SaldoContaA += valor
+                    EscrevaEAguarde ("Depósito efetuado com sucesso! ", TEMPO_PADRAO)
                     pare
               }
               caso 3:
               {
-                    escreva ("Mostra a Transferir")
-                    u.aguarde (2000)
+                    escreva ("Conta Destino: ")
+                    leia ( contaDestino)
+                    se (ExisteConta (contaDestino,verdadeiro))
+                    {   
+                        escreva("Valor para transferencia: ")
+                        leia ( valor)
+                        se(ExisteSaldo (conta, valor))
+                         {
+                          SaldoContaA -= valor
+                          SaldoContaB += valor
+                          EscrevaEAguarde ("Depósito efetuado com sucesso! ", TEMPO_PADRAO)
+                         }
+                     }
                     pare
               }
-                caso 4:
+              caso 4:
               {
-                    escreva (" Seu saldo é:")
-                    u.aguarde (2000)
-                    pare
+                 VerSaldo()
+                 pare
               }
-              
-      }
+              caso 5:
+              {
+                pare
+              }
+             
+             caso contrario:
+            EscrevaEAguarde("Opção Invalida!", TEMPO_PADRAO)
+         }
+       }
       escreva ("Obrigado por usar o banco Proway")
+
    funcao inicio()
-   {
-       enquanto (nao(validaAcesso(login,senha)))
+     {   
+       enquanto (nao(validaAcesso(login,senha,conta)))
        { 
-          se ((login != "") e (senha!= ""))
+          se ((login != "") e (senha!= "") e (conta != "")) 
               {
+                 se (existeConta(conta,falso))
+                 {                 
                   escreva ("Login/senha invalidos")
                   u.aguarde (3000)
+                 }
               }
           
            limpa()
@@ -70,10 +163,9 @@ programa
            leia(login)
            escreva("Senha: ")
            leia(senha)
+           escreva("Conta: ")
+           leia(conta)
         }
-    }
+     }
 }
-           
-    
-   
    
